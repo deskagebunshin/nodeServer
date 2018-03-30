@@ -57,6 +57,11 @@ io.sockets.on('connection', function(socket){
     io.sockets.emit('speed down now');
   });
 
+  socket.on('interupt', function (data) {
+    console.log('interupt');
+    io.sockets.emit('interupt now', data);
+  });
+
   socket.on('update list', function (data) {
     console.log('new list:' + data);
     io.sockets.emit('new list', data);
