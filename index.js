@@ -26,6 +26,25 @@ io.sockets.on('connection', function(socket){
   //
   socket.on('send message', function (data) {
     console.log(data);
-    io.sockets.emit('new message', {msg: data});
-  })
+    io.sockets.emit('new message', {msg: data.msg, plat: data.platforms});
+  });
+
+  socket.on('delete object', function (data) {
+    console.log('deleting:' + data);
+    io.sockets.emit('delete', data);
+  });
+
+  socket.on('update list', function functionName(data) {
+    console.log('updating list:' + data);
+    io.sockets.emit('new list', data);
+  });
+  socket.on('refresh', function (data) {
+    console.log('refresh now please');
+    io.sockets.emit('refresh now');
+  });
+
+  socket.on('update list', function (data) {
+    console.log('new list:' + data);
+    io.sockets.emit('new list', data);
+  });
 });

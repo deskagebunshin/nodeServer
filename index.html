@@ -21,47 +21,174 @@
       <div class="row">
         <div class="col-md-4">
           <div class="well">
-            <h3>online users</h3>
+            <h2>online users</h2>
             <ul class="list-group" id="users">
 
             </ul>
           </div>
         </div>
         <div class="col-md-8">
-          <div class="chat" id="chat">
-
-          </div>
           <form id="messageForm">
             <div class="form-group">
               <label>Enter Message</label>
-              <textarea class="form-control" id="message">
-              </textarea>
-              <br>
-              <input type="submit" class="btn btn-primary" value="Send Message" />
+              <textarea class="form-control" id="message"></textarea>
+                <input type="checkbox" id="addNetflix" name="addNetflix" value="netflix">
+                <label for="addNetflix">netflix</label>
+                <input type="checkbox" id="addSpotify" name="addSpotify" value="spotify">
+                <label for="addSpotify">spotify</label>
+                <input type="checkbox" id="addYoutube" name="addYoutube" value="youtube">
+                <label for="addYoutube">youtube</label>
+                <input type="checkbox" id="addFacebook" name="addFacebook" value="facebook">
+                <label for="addFacebook">facebook</label>
+                <input type="checkbox" id="addWeb" name="addWeb" value="web">
+                <label for="addWeb">web</label>
+                <br>
+                <input type="checkbox" id="now" name="now" value="now">
+                <label for="now">now</label>
+                <input id="time" type="number">
+                <br>
+                <input type="submit" class="btn btn-primary" value="Send Message" />
 
             </div>
           </form>
+          <div class="well">
+            <button id="shuffle" class="btn btn-primary" type="shuffle" value="shuffle">SHUFFLE</button>
+            <button id="speedUp" class="btn btn-primary" type="speedUp" value="speedUp">↑Speed</button>
+            <button id="speedDown" class="btn btn-primary" type="speedDown" value="speedDown">↓Speed</button>
+          </div>
+            <br>
+          <div class="list" id="chat">
+
+          </div>
         </div>
       </div>
     </div>
 
     <script>
+
+      var socket = io.connect();
+      var $messageForm,
+      $message,
+      $list,
+      $netflix,
+      $spotify,
+      $youtube,
+      $now,
+      $time,
+      $facebook,
+      $web,
+      $shuffle,
+      $speedUp,
+      $speedDown;
+
+      function Delete(msg) {
+        console.log(msg);
+      }
+
+      function UpdateList(data) {
+        console.log(data);
+        console.log(data.netflix.length);
+        while ($list[0].firstChild) {
+            $list[0].removeChild($list[0].firstChild);
+        }
+        AppendText('netflix');
+        for (var i = 0; i < data.netflix.length; i++) {
+          AppendNew(data.netflix[i], 'netflix');
+        }
+        AppendText('spotify');
+        for (var i = 0; i < data.spotify.length; i++) {
+          AppendNew(data.spotify[i], 'spotify');
+        }
+        AppendText('youtube');
+        for (var i = 0; i < data.youtube.length; i++) {
+          AppendNew(data.youtube[i], 'youtube');
+        }
+        AppendText('facebook');
+        for (var i = 0; i < data.facebook.length; i++) {
+          AppendNew(data.facebook[i], 'facebook');
+        }
+        AppendText('web');
+        for (var i = 0; i < data.web.length; i++) {
+          AppendNew(data.web[i], 'web');
+        }
+      }
+
+      function AppendText(name){
+        $list.append('<br><div class="well"><h4>'+name+'</h4></div><br>');
+      }
+
+      function AppendNew(name, plat) {
+        $list.append('<div class="well"><kbd>'+name+'</kbd> <---<button class="btn" type="'+plat+'" value="'+name+'">delete</button></div>');
+        var button = $('[class="btn"][value="'+name+'"][type="'+plat+'"]');
+        button[0].onclick = function(){
+            console.log('deleting:' + name + plat);
+            socket.emit('delete object', {name: name, plat: plat});
+        };
+      }
       $(function() {
-        var socket = io.connect();
-        var $messageForm = $('#messageForm');
-        var $message = $('#message');
-        var $chat = $('#chat');
+        $now = $('#now');
+        $time = $('#time')
+        $messageForm = $('#messageForm');
+        $message = $('#message');
+        $list = $('#chat');
+        $netflix = $('#addNetflix');
+        $spotify = $('#addSpotify');
+        $youtube = $('#addYoutube');
+        $facebook = $('#addFacebook');
+        $web = $('#addWeb');
+        $speedUp = $('#speedUp');
+        $speedDown = $('#speedDown');
+        $shuffle = $('#shuffle');
+
+        $speedUp[0].onclick = function () {
+          socket.emit('speedUp');
+        }
+        $speedDown[0].onclick = function () {
+          socket.emit('speedDown');
+        }
+        $shuffle[0].onclick = function () {
+          socket.emit('shuffle');
+        }
 
         $messageForm.submit(function (e) {
           e.preventDefault();
-          console.log('submited');
-          socket.emit('send message', $message.val());
-          $message.val('');
+          var plat = [];
+          if($netflix[0].checked == true){
+            plat.push('netflix');
+          }
+          if($spotify[0].checked == true){
+            plat.push('spotify');
+          }
+          if($youtube[0].checked == true){
+            plat.push('youtube');
+          }
+          if($facebook[0].checked == true){
+            plat.push('youtube');
+          }
+          if($web[0].checked == true){
+            plat.push('web');
+          }
+
+
+          if($now[0].checked){
+            console.log('interupt');
+            socket.emit('interupt', {msg: $message.val(), platforms: plat, time:$time.val()});
+            $message.val('');
+            $time.val(0);
+            $now[0].checked = false;
+          } else {
+            console.log('submited');
+            socket.emit('send message', {msg: $message.val(), platforms: plat});
+            $message.val('');
+          }
+
         })
 
-        socket.on('new message', function (data) {
-          $chat.append('<div class="well">'+data.msg+'</div>');          
-        })
+        socket.on('new list', function (data) {
+          UpdateList(data);
+        });
+
+        socket.emit('refresh');
       });
     </script>
   </body>
