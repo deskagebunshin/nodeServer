@@ -119,7 +119,7 @@
 
       function AppendNew(name, plat) {
         $list.append('<div class="well"><kbd>'+name+'</kbd> <---<button class="btn btn-primary" type="'+plat+'" value="'+name+'">delete</button></div>');
-        var button = $('[class="btn"][value="'+name+'"][type="'+plat+'"]');
+        var button = $('button[value="'+name+'"][type="'+plat+'"]');
         button[0].onclick = function(){
             console.log('deleting:' + name + plat);
             socket.emit('delete object', {name: name, plat: plat});
