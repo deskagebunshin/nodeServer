@@ -191,6 +191,9 @@
           UpdateList(data);
         });
 
+        socket.on('delete', function (data) {
+            console.log('deleting:' + data);
+        });
         socket.emit('refresh');
       });
     </script>
