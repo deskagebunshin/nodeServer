@@ -23,7 +23,7 @@ app.get('/', function(req, res){
     console.log('Disconnected %s sockets connected', connections.length);
   });
 
-  //
+  //send message
   socket.on('send message', function (data) {
     console.log('new message'+ data.msg);
     io.sockets.emit('new message', {msg: data.msg, plat: data.platforms});
