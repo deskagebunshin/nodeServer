@@ -121,7 +121,7 @@
         $list.append('<div class="well"><kbd>'+name+'</kbd> <---<button class="btn btn-primary" type="'+plat+'" value="'+name+'">delete</button></div>');
         var button = $('button[value="'+name+'"][type="'+plat+'"]');
         button[0].onclick = function(){
-            console.log('deleting:' + name + plat);
+            console.log('deleting: name= ' + name + ' plat = '+ plat);
             socket.emit('delete object', {name: name, plat: plat});
         };
       }
@@ -192,7 +192,7 @@
         });
 
         socket.on('delete', function (data) {
-            console.log('deleting:' + data);
+            console.log('from server: deleting:' + data.msg);
         });
         socket.emit('refresh');
       });
