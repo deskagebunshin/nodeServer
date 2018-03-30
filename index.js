@@ -38,9 +38,23 @@ io.sockets.on('connection', function(socket){
     console.log('updating list:' + data);
     io.sockets.emit('new list', data);
   });
+
   socket.on('refresh', function (data) {
     console.log('refresh now please');
     io.sockets.emit('refresh now');
+  });
+
+  socket.on('shuffle', function (data) {
+    console.log('shuffle');
+    io.sockets.emit('shuffle now');
+  });
+  socket.on('speedUp', function (data) {
+    console.log('speed up');
+    io.sockets.emit('speed up now');
+  });
+  socket.on('speedDown', function (data) {
+    console.log('speed down');
+    io.sockets.emit('speed down now');
   });
 
   socket.on('update list', function (data) {
