@@ -118,7 +118,7 @@
       }
 
       function AppendNew(name, plat) {
-        $list.append('<div class="well"><kbd>'+name+'</kbd> <---<button class="btn" type="'+plat+'" value="'+name+'">delete</button></div>');
+        $list.append('<div class="well"><kbd>'+name+'</kbd> <---<button class="btn btn-primary" type="'+plat+'" value="'+name+'">delete</button></div>');
         var button = $('[class="btn"][value="'+name+'"][type="'+plat+'"]');
         button[0].onclick = function(){
             console.log('deleting:' + name + plat);
@@ -141,12 +141,15 @@
         $shuffle = $('#shuffle');
 
         $speedUp[0].onclick = function () {
+          console.log('speedUp');
           socket.emit('speedUp');
         }
         $speedDown[0].onclick = function () {
+          console.log('speedUp');
           socket.emit('speedDown');
         }
         $shuffle[0].onclick = function () {
+          console.log('shuffle');
           socket.emit('shuffle');
         }
 
