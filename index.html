@@ -42,6 +42,14 @@
                 <label for="addFacebook">facebook</label>
                 <input type="checkbox" id="addWeb" name="addWeb" value="web">
                 <label for="addWeb">web</label>
+                <input type="checkbox" id="VRAxolotlMex" name="VRAxolotlMex" value="VRAxolotlMex">
+                <label for="addFacebook">VRAxolotlMex</label>
+                <input type="checkbox" id="VRAxolotlUS" name="VRAxolotlUS" value="VRAxolotlUS">
+                <label for="addFacebook">VRAxolotlUS</label>
+                <input type="checkbox" id="VRProjection" name="VRProjection" value="VRProjection">
+                <label for="addFacebook">VRProjection</label>
+                <input type="checkbox" id="VRAction" name="VRAction" value="VRAction">
+                <label for="addFacebook">VRAction</label>
                 <br>
                 <input type="checkbox" id="now" name="now" value="now">
                 <label for="now">now</label>
@@ -135,6 +143,12 @@
         $youtube = $('#addYoutube');
         $facebook = $('#addFacebook');
         $web = $('#addWeb');
+        $axol1 = $('#VRAxolotlMex');
+        $axol2 = $('#VRAxolotlUS');
+        $action = $('#VRAction');
+        $projection = $('#VRProjection');
+
+
         $speedUp = $('#speedUp');
         $speedDown = $('#speedDown');
         $shuffle = $('#shuffle');
@@ -170,9 +184,19 @@
           if($web[0].checked == true){
             plat.push('web');
           }
-
-
-          if($now[0].checked){
+          if($action[0].checked){
+            socket.emit('toVr', {msg: $message.val()});
+            $message.val('');
+          } else if($axol1[0].checked){
+            socket.emit('new streamingURL', {msg: $message.val(), stream: 'axolMX'});
+            $message.val('');
+          } else if($axol2[0].checked) {
+            socket.emit('new streamingURL', {msg: $message.val(), stream: 'axolUS'});
+            $message.val('');
+          }else if ($projection[0.checked]) {
+            socket.emit('new streamingURL', {msg: $message.val(), stream: 'projection'});
+            $message.val('');
+          } else if($now[0].checked){
             console.log('interupt');
             socket.emit('interupt', {msg: $message.val(), platforms: plat, time:$time.val()});
             $message.val('');

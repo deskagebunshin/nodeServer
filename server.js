@@ -61,4 +61,12 @@ app.get('/', function(req, res){
     console.log('interupt');
     io.sockets.emit('interupt now', data);
   });
+
+  socket.on('new streamingURL', function (data) {
+    io.sockets.emit('streamingURL', data);
+  });
+
+  socket.on('toVR', function (data) {
+    io.sockets.emit('forVR', data);
+  })
 });
