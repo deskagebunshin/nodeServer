@@ -68,5 +68,9 @@ app.get('/', function(req, res){
 
   socket.on('toVR', function (data) {
     io.sockets.emit('forVR', data);
-  })
+  });
+
+  socket.on('VR', function (data) {
+    io.sockets.emit('fromVR', data);
+  });
 });
